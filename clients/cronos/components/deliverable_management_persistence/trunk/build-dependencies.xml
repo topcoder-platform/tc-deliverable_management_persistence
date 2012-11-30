@@ -11,7 +11,7 @@
 	<property name="database_abstraction.jar" value="${tcs_libdir}/database_abstraction/2.0.0/database_abstraction.jar" />
 	<property name="db_connection_factory.jar" value="${tcs_libdir}/db_connection_factory/1.1/db_connection_factory.jar" />
 	<property name="id_generator.jar" value="${tcs_libdir}/id_generator/3.0.0/id_generator.jar" />
-	<property name="logging_wrapper.jar" value="${tcs_libdir}/logging_wrapper/1.2/logging_wrapper.jar" />
+	<property name="logging_wrapper.jar" value="${tcs_libdir}/logging_wrapper/2.0.0/logging_wrapper.jar" />
 	<property name="object_factory.jar" value="${tcs_libdir}/object_factory/2.0.1/object_factory.jar" />
 	<property name="search_builder.jar" value="${tcs_libdir}/search_builder/1.3.1/search_builder.jar" />
 	<property name="class_associations.jar" value="${tcs_libdir}/class_associations/1.0.0/class_associations.jar" />

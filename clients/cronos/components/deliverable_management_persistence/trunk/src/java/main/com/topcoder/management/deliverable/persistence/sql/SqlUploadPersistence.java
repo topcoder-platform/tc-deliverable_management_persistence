@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2011 TopCoder Inc., All Rights Reserved.
+ * Copyright (C) 2006-2012 TopCoder Inc., All Rights Reserved.
  */
 package com.topcoder.management.deliverable.persistence.sql;
 
@@ -35,7 +35,7 @@ import com.topcoder.management.project.Prize;
 import com.topcoder.management.project.PrizeType;
 import com.topcoder.util.log.Level;
 import com.topcoder.util.log.Log;
-import com.topcoder.util.log.LogFactory;
+import com.topcoder.util.log.LogManager;
 import com.topcoder.util.sql.databaseabstraction.CustomResultSet;
 import com.topcoder.util.sql.databaseabstraction.InvalidCursorStateException;
 import com.topcoder.util.sql.databaseabstraction.NullColumnValueException;
@@ -177,7 +177,7 @@ import com.topcoder.util.sql.databaseabstraction.NullColumnValueException;
  *
  * @author aubergineanode, saarixx, urtks, George1
  * @author TCSDESIGNER, TCSDEVELOPER
- * @version 1.2.2
+ * @version 1.2.3
  */
 public class SqlUploadPersistence implements UploadPersistence {
 
@@ -186,7 +186,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      * Logger instance using the class name as category.
      * </p>
      */
-    private static final Log LOGGER = LogFactory.getLog(SqlUploadPersistence.class.getName());
+    private static final Log LOGGER = LogManager.getLog(SqlUploadPersistence.class.getName());
 
     /**
      * <p>
@@ -618,7 +618,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             If connectionFactory is null, or connectionName is empty (trimmed).
      */
     public SqlUploadPersistence(DBConnectionFactory connectionFactory, String connectionName) {
-        LOGGER.log(Level.INFO, "Instantiate SqlUploadPersistence with connectionFactory and connectionName:"
+        LOGGER.log(Level.DEBUG, "Instantiate SqlUploadPersistence with connectionFactory and connectionName:"
                 + connectionName);
 
         Helper.assertObjectNotNull(connectionFactory, "connectionFactory", LOGGER);
@@ -642,7 +642,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             If there is an error when making the change in the persistence
      */
     public void addUploadType(UploadType uploadType) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("UploadType", getIdFromEntity(uploadType), null, "add new UploadType"));
+        LOGGER.log(Level.DEBUG, new LogMessage("UploadType", getIdFromEntity(uploadType), null, "add new UploadType"));
 
         assertEntityNotNullAndValidToPersist(uploadType, "uploadType", LOGGER);
 
@@ -664,7 +664,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             If there is an error when making the change in the persistence
      */
     public void addUploadStatus(UploadStatus uploadStatus) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("UploadStatus", getIdFromEntity(uploadStatus), null,
+        LOGGER.log(Level.DEBUG, new LogMessage("UploadStatus", getIdFromEntity(uploadStatus), null,
                 "add new uploadStatus"));
 
         assertEntityNotNullAndValidToPersist(uploadStatus, "uploadStatus", LOGGER);
@@ -687,7 +687,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             If there is an error when making the change in the persistence
      */
     public void addSubmissionStatus(SubmissionStatus submissionStatus) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("SubmissionStatus", getIdFromEntity(submissionStatus), null,
+        LOGGER.log(Level.DEBUG, new LogMessage("SubmissionStatus", getIdFromEntity(submissionStatus), null,
                 "add new SubmissionStatus."));
 
         assertEntityNotNullAndValidToPersist(submissionStatus, "submissionStatus", LOGGER);
@@ -710,7 +710,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             If there is an error when making the change in the persistence
      */
     public void removeUploadType(UploadType uploadType) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("UploadType", getIdFromEntity(uploadType), null, "Remove UploadType."));
+        LOGGER.log(Level.DEBUG, new LogMessage("UploadType", getIdFromEntity(uploadType), null, "Remove UploadType."));
 
         Helper.assertObjectNotNull(uploadType, "uploadType", LOGGER);
         Helper.assertIdNotUnset(uploadType.getId(), "uploadType id", LOGGER);
@@ -733,7 +733,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             If there is an error when making the change in the persistence
      */
     public void removeUploadStatus(UploadStatus uploadStatus) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("UploadStatus", getIdFromEntity(uploadStatus), null,
+        LOGGER.log(Level.DEBUG, new LogMessage("UploadStatus", getIdFromEntity(uploadStatus), null,
                 "Remove UploadStatus."));
 
         Helper.assertObjectNotNull(uploadStatus, "uploadStatus", LOGGER);
@@ -757,7 +757,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             If there is an error when making the change in the persistence
      */
     public void removeSubmissionStatus(SubmissionStatus submissionStatus) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("SubmissionStatus", getIdFromEntity(submissionStatus), null,
+        LOGGER.log(Level.DEBUG, new LogMessage("SubmissionStatus", getIdFromEntity(submissionStatus), null,
                 "Remove SubmissionStatus."));
 
         Helper.assertObjectNotNull(submissionStatus, "submissionStatus", LOGGER);
@@ -781,7 +781,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             If there is an error when making the change in the persistence
      */
     public void removeUpload(Upload upload) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("Upload", getIdFromEntity(upload), null, "Remove Upload."));
+        LOGGER.log(Level.DEBUG, new LogMessage("Upload", getIdFromEntity(upload), null, "Remove Upload."));
 
         Helper.assertObjectNotNull(upload, "upload", LOGGER);
         Helper.assertIdNotUnset(upload.getId(), "upload id", LOGGER);
@@ -804,7 +804,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             If there is an error when making the change in the persistence
      */
     public void removeSubmission(Submission submission) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("Submission", getIdFromEntity(submission), null, "Remove Submission."));
+        LOGGER.log(Level.DEBUG, new LogMessage("Submission", getIdFromEntity(submission), null, "Remove Submission."));
 
         Helper.assertObjectNotNull(submission, "submission", LOGGER);
         Helper.assertIdNotUnset(submission.getId(), "submission id", LOGGER);
@@ -827,7 +827,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             If there is an error when making the change in the persistence
      */
     public void updateUploadType(UploadType uploadType) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("UploadType", getIdFromEntity(uploadType), null, "Update UploadType."));
+        LOGGER.log(Level.DEBUG, new LogMessage("UploadType", getIdFromEntity(uploadType), null, "Update UploadType."));
 
         assertEntityNotNullAndValidToPersist(uploadType, "uploadType", LOGGER);
 
@@ -849,7 +849,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             If there is an error when making the change in the persistence
      */
     public void updateUploadStatus(UploadStatus uploadStatus) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("UploadStatus", getIdFromEntity(uploadStatus), null,
+        LOGGER.log(Level.DEBUG, new LogMessage("UploadStatus", getIdFromEntity(uploadStatus), null,
                 "Update UploadStatus."));
 
         assertEntityNotNullAndValidToPersist(uploadStatus, "uploadStatus", LOGGER);
@@ -872,7 +872,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             If there is an error when making the change in the persistence
      */
     public void updateSubmissionStatus(SubmissionStatus submissionStatus) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("SubmissionStatus", getIdFromEntity(submissionStatus), null,
+        LOGGER.log(Level.DEBUG, new LogMessage("SubmissionStatus", getIdFromEntity(submissionStatus), null,
                 "Update SubmissionStatus."));
 
         assertEntityNotNullAndValidToPersist(submissionStatus, "submissionStatus", LOGGER);
@@ -937,7 +937,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      * @since 1.1
      */
     public void addSubmissionType(SubmissionType submissionType) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("SubmissionType", getIdFromEntity(submissionType), null,
+        LOGGER.log(Level.DEBUG, new LogMessage("SubmissionType", getIdFromEntity(submissionType), null,
                 "add new SubmissionType."));
 
         assertEntityNotNullAndValidToPersist(submissionType, "submissionType", LOGGER);
@@ -960,7 +960,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      * @since 1.1
      */
     public void removeSubmissionType(SubmissionType submissionType) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("SubmissionType", getIdFromEntity(submissionType), null,
+        LOGGER.log(Level.DEBUG, new LogMessage("SubmissionType", getIdFromEntity(submissionType), null,
                 "Remove SubmissionType."));
 
         Helper.assertObjectNotNull(submissionType, "submissionType", LOGGER);
@@ -984,7 +984,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      * @since 1.1
      */
     public void updateSubmissionType(SubmissionType submissionType) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("SubmissionType", getIdFromEntity(submissionType), null,
+        LOGGER.log(Level.DEBUG, new LogMessage("SubmissionType", getIdFromEntity(submissionType), null,
                 "Update submissionType."));
 
         assertEntityNotNullAndValidToPersist(submissionType, "submissionType", LOGGER);
@@ -1008,7 +1008,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      * @since 1.1
      */
     public SubmissionType loadSubmissionType(long submissionTypeId) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("SubmissionType", submissionTypeId, null,
+        LOGGER.log(Level.DEBUG, new LogMessage("SubmissionType", submissionTypeId, null,
                 "Load SubmissionType. Delegate to loadSubmissionTypes(long[])."));
 
         Helper.assertIdNotUnset(submissionTypeId, "submissionTypeId", LOGGER);
@@ -1032,7 +1032,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      * @since 1.1
      */
     public SubmissionType[] loadSubmissionTypes(long[] submissionTypeIds) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("SubmissionType", null, null, "Load SubmissionTypes with ids:"
+        LOGGER.log(Level.DEBUG, new LogMessage("SubmissionType", null, null, "Load SubmissionTypes with ids:"
                 + Helper.getIdString(submissionTypeIds)));
 
         Helper.assertLongArrayNotNullAndOnlyHasPositive(submissionTypeIds, "submissionTypeIds", LOGGER);
@@ -1071,7 +1071,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             if there is an error when reading the persistence data
      */
     public UploadType loadUploadType(long uploadTypeId) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("UploadType", uploadTypeId, null,
+        LOGGER.log(Level.DEBUG, new LogMessage("UploadType", uploadTypeId, null,
                 "Load UploadType. Delegate to loadUploadTypes(long[])."));
 
         Helper.assertIdNotUnset(uploadTypeId, "uploadTypeId", LOGGER);
@@ -1095,7 +1095,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             if there is an error when reading the persistence data
      */
     public UploadStatus loadUploadStatus(long uploadStatusId) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("UploadStatus", uploadStatusId, null,
+        LOGGER.log(Level.DEBUG, new LogMessage("UploadStatus", uploadStatusId, null,
                 "Load UploadStatus. Delegate to loadUploadStatuses(long[])."));
 
         Helper.assertIdNotUnset(uploadStatusId, "uploadStatusId", LOGGER);
@@ -1119,7 +1119,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             if there is an error when reading the persistence data
      */
     public SubmissionStatus loadSubmissionStatus(long submissionStatusId) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("SubmissionStatus", submissionStatusId, null,
+        LOGGER.log(Level.DEBUG, new LogMessage("SubmissionStatus", submissionStatusId, null,
                 "Load SubmissionStatus. Delegate to loadSubmissionStatuses(long[])."));
         Helper.assertIdNotUnset(submissionStatusId, "submissionStatusId", LOGGER);
 
@@ -1141,7 +1141,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             if there is an error when reading the persistence data
      */
     public UploadType[] loadUploadTypes(long[] uploadTypeIds) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("UploadType", null, null, "Load UploadTypes with ids:"
+        LOGGER.log(Level.DEBUG, new LogMessage("UploadType", null, null, "Load UploadTypes with ids:"
                 + Helper.getIdString(uploadTypeIds)));
 
         Helper.assertLongArrayNotNullAndOnlyHasPositive(uploadTypeIds, "uploadTypeIds", LOGGER);
@@ -1163,7 +1163,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             if there is an error when reading the persistence data
      */
     public UploadStatus[] loadUploadStatuses(long[] uploadStatusIds) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("UploadStatus", null, null, "Load UploadStatuses with ids:"
+        LOGGER.log(Level.DEBUG, new LogMessage("UploadStatus", null, null, "Load UploadStatuses with ids:"
                 + Helper.getIdString(uploadStatusIds)));
 
         Helper.assertLongArrayNotNullAndOnlyHasPositive(uploadStatusIds, "uploadStatusIds", LOGGER);
@@ -1186,7 +1186,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             if there is an error when reading the persistence data
      */
     public SubmissionStatus[] loadSubmissionStatuses(long[] submissionStatusIds) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("SubmissionStatus", null, null, "Load SubmissionStatuses with ids:"
+        LOGGER.log(Level.DEBUG, new LogMessage("SubmissionStatus", null, null, "Load SubmissionStatuses with ids:"
                 + Helper.getIdString(submissionStatusIds)));
 
         Helper.assertLongArrayNotNullAndOnlyHasPositive(submissionStatusIds, "submissionStatusIds", LOGGER);
@@ -1217,7 +1217,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             If there is an error when making the change in the persistence
      */
     public void addUpload(Upload upload) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("Upload", getIdFromEntity(upload), null,
+        LOGGER.log(Level.DEBUG, new LogMessage("Upload", getIdFromEntity(upload), null,
                 "Add new Upload, it will insert record into upload table."));
 
         assertEntityNotNullAndValidToPersist(upload, "upload", LOGGER);
@@ -1251,7 +1251,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             If there is an error when making the change in the persistence
      */
     public void updateUpload(Upload upload) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("Upload", getIdFromEntity(upload), null,
+        LOGGER.log(Level.DEBUG, new LogMessage("Upload", getIdFromEntity(upload), null,
                 "Update Upload, it will update record in upload table."));
 
         assertEntityNotNullAndValidToPersist(upload, "upload", LOGGER);
@@ -1286,7 +1286,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             If there is an error when making the change in the persistence
      */
     public void addSubmission(Submission submission) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("Submission", getIdFromEntity(submission), null,
+        LOGGER.log(Level.DEBUG, new LogMessage("Submission", getIdFromEntity(submission), null,
                 "Add new Submission, it will insert record into submission table."));
 
         assertEntityNotNullAndValidToPersist(submission, "submission", LOGGER);
@@ -1325,7 +1325,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             If there is an error when making the change in the persistence
      */
     public void updateSubmission(Submission submission) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("Submission", getIdFromEntity(submission), null,
+        LOGGER.log(Level.DEBUG, new LogMessage("Submission", getIdFromEntity(submission), null,
                 "Update Submission, it will update record in submission table."));
 
         assertEntityNotNullAndValidToPersist(submission, "submission", LOGGER);
@@ -1357,7 +1357,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             if there is an error when reading the persistence data
      */
     public Upload loadUpload(long uploadId) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO,
+        LOGGER.log(Level.DEBUG,
                 new LogMessage("Upload", uploadId, null, "Load Upload. Delegate to loadUploads(long[])."));
 
         Helper.assertIdNotUnset(uploadId, "uploadId", LOGGER);
@@ -1383,7 +1383,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             if there is an error when reading the persistence data
      */
     public Upload[] loadUploads(long[] uploadIds) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("Upload", null, null, "Load Uploads with ids: "
+        LOGGER.log(Level.DEBUG, new LogMessage("Upload", null, null, "Load Uploads with ids: "
                 + Helper.getIdString(uploadIds)));
 
         Helper.assertLongArrayNotNullAndOnlyHasPositive(uploadIds, "uploadIds", LOGGER);
@@ -1437,7 +1437,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             if any error occurs while loading uploads.
      */
     public Upload[] loadUploads(CustomResultSet resultSet) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("Upload", null, null, "Load Uploads from he custom result set."));
+        LOGGER.log(Level.DEBUG, new LogMessage("Upload", null, null, "Load Uploads from he custom result set."));
 
         Helper.assertObjectNotNull(resultSet, "resultSet", LOGGER);
 
@@ -1470,7 +1470,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             if there is an error when reading the persistence data
      */
     public Submission loadSubmission(long submissionId) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("Submission", submissionId, null,
+        LOGGER.log(Level.DEBUG, new LogMessage("Submission", submissionId, null,
                 "Load Submission. Delegate to loadSubmissions(long[])."));
 
         Helper.assertIdNotUnset(submissionId, "submissionId", LOGGER);
@@ -1498,7 +1498,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      *             if there is an error when reading the persistence data
      */
     public Submission[] loadSubmissions(long[] submissionIds) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("Submission", null, null, "Load Submissions with ids:"
+        LOGGER.log(Level.DEBUG, new LogMessage("Submission", null, null, "Load Submissions with ids:"
                 + Helper.getIdString(submissionIds)));
 
         Helper.assertLongArrayNotNullAndOnlyHasPositive(submissionIds, "submissionIds", LOGGER);
@@ -1557,7 +1557,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      */
     public Submission[] loadSubmissions(CustomResultSet resultSet) throws UploadPersistenceException {
         LOGGER
-                .log(Level.INFO, new LogMessage("Submission", null, null,
+                .log(Level.DEBUG, new LogMessage("Submission", null, null,
                         "Load Submissions from the custom result set."));
 
         Helper.assertObjectNotNull(resultSet, "resultSet", LOGGER);
@@ -1587,7 +1587,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      * @since 1.2
      */
     public void addSubmissionImage(SubmissionImage submissionImage) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("SubmissionImage", null, null, "add new SubmissionImage"));
+        LOGGER.log(Level.DEBUG, new LogMessage("SubmissionImage", null, null, "add new SubmissionImage"));
 
         Helper.assertObjectNotNull(submissionImage, "submissionImage", LOGGER);
 
@@ -1596,7 +1596,7 @@ public class SqlUploadPersistence implements UploadPersistence {
                     "The entity [SubmissionImage] is not valid to persist."));
         }
 
-        LOGGER.log(Level.INFO, "add record into table[submission_image] with submission id: "
+        LOGGER.log(Level.DEBUG, "add record into table[submission_image] with submission id: "
                 + submissionImage.getSubmissionId() + ", and image id:" + submissionImage.getImageId());
 
         // build arguments
@@ -1621,7 +1621,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      * @since 1.2
      */
     public void updateSubmissionImage(SubmissionImage submissionImage) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("SubmissionImage", null, null, "update SubmissionImage"));
+        LOGGER.log(Level.DEBUG, new LogMessage("SubmissionImage", null, null, "update SubmissionImage"));
 
         Helper.assertObjectNotNull(submissionImage, "submissionImage", LOGGER);
 
@@ -1630,7 +1630,7 @@ public class SqlUploadPersistence implements UploadPersistence {
                     "The entity [SubmissionImage] is not valid to persist."));
         }
 
-        LOGGER.log(Level.INFO, "update record into table[submission_image] with submission id: "
+        LOGGER.log(Level.DEBUG, "update record into table[submission_image] with submission id: "
                 + submissionImage.getSubmissionId() + ", and image id:" + submissionImage.getImageId());
 
         // build arguments
@@ -1657,13 +1657,13 @@ public class SqlUploadPersistence implements UploadPersistence {
      * @since 1.2
      */
     public void removeSubmissionImage(SubmissionImage submissionImage) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("SubmissionImage", null, null, "remove SubmissionImage."));
+        LOGGER.log(Level.DEBUG, new LogMessage("SubmissionImage", null, null, "remove SubmissionImage."));
 
         Helper.assertObjectNotNull(submissionImage, "submissionImage", LOGGER);
         assertLongBePositive(submissionImage.getSubmissionId(), "submission id of the given submission image", LOGGER);
         assertLongBePositive(submissionImage.getImageId(), "image id of the given submission image", LOGGER);
 
-        LOGGER.log(Level.INFO, "remove record into table[submission_image] with submission id: "
+        LOGGER.log(Level.DEBUG, "remove record into table[submission_image] with submission id: "
                 + submissionImage.getSubmissionId() + ", and image id:" + submissionImage.getImageId());
 
         // build arguments
@@ -1688,7 +1688,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      * @since 1.2
      */
     public MimeType loadMimeType(long mimeTypeId) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("MimeType", mimeTypeId, null,
+        LOGGER.log(Level.DEBUG, new LogMessage("MimeType", mimeTypeId, null,
                 "Load MimeType. Delegate to loadMimeTypes(long[])."));
 
         assertLongBePositive(mimeTypeId, "mimeTypeId", LOGGER);
@@ -1707,7 +1707,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      * @since 1.2
      */
     public long[] getAllMimeTypeIds() throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("MimeType", null, null, "Load all MimeType ids in persistence."));
+        LOGGER.log(Level.DEBUG, new LogMessage("MimeType", null, null, "Load all MimeType ids in persistence."));
 
         return getAllEntityIds("mime_type_lu", "mime_type_id");
     }
@@ -1725,7 +1725,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      * @since 1.2
      */
     public MimeType[] loadMimeTypes(long[] mimeTypeIds) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("MimeType", null, null, "Load MimeType with ids:"
+        LOGGER.log(Level.DEBUG, new LogMessage("MimeType", null, null, "Load MimeType with ids:"
                 + Helper.getIdString(mimeTypeIds)));
 
         Helper.assertLongArrayNotNullAndOnlyHasPositive(mimeTypeIds, "mimeTypeIds", LOGGER);
@@ -1774,7 +1774,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      * @since 1.2
      */
     public SubmissionImage[] getImagesForSubmission(long submissionId) throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, new LogMessage("SubmissionImage", null, null, MessageFormat.format(
+        LOGGER.log(Level.DEBUG, new LogMessage("SubmissionImage", null, null, MessageFormat.format(
                 "Load SubmissionImages for submission id [{0}].", submissionId)));
 
         assertLongBePositive(submissionId, "submissionId", LOGGER);
@@ -1830,7 +1830,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      */
     private void removeEntity(AuditedDeliverableStructure entity, String tableName, String idName)
         throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, "delete record from table: " + tableName + " with id:" + entity.getId());
+        LOGGER.log(Level.DEBUG, "delete record from table: " + tableName + " with id:" + entity.getId());
 
         // build arguments
         Object[] queryArgs = new Object[] {entity.getId()};
@@ -1858,7 +1858,7 @@ public class SqlUploadPersistence implements UploadPersistence {
      */
     private void addNameEntity(NamedDeliverableStructure namedEntity, String tableName, String idName)
         throws UploadPersistenceException {
-        LOGGER.log(Level.INFO, "add record into table:" + tableName + " with id:" + namedEntity.getId());
+        LOGGER.log(Level.DEBUG, "add record into table:" + tableName + " with id:" + namedEntity.getId());
 
         // build arguments
         Object[] queryArgs = new Object[] {namedEntity.getId(), namedEntity.getCreationUser(),
@@ -1890,7 +1890,7 @@ public class SqlUploadPersistence implements UploadPersistence {
     private void updateNamedEntity(NamedDeliverableStructure namedEntity, String tableName, String idName)
         throws UploadPersistenceException {
 
-        LOGGER.log(Level.INFO, "update record in table: " + tableName + " with id:" + namedEntity.getId());
+        LOGGER.log(Level.DEBUG, "update record in table: " + tableName + " with id:" + namedEntity.getId());
 
         // build arguments
         Object[] queryArgs = new Object[] {namedEntity.getModificationUser(), namedEntity.getModificationTimestamp(),

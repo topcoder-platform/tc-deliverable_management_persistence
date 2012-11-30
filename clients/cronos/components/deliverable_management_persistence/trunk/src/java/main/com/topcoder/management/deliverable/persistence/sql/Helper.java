@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2010 TopCoder Inc., All Rights Reserved.
+ * Copyright (C) 2006-2012 TopCoder Inc., All Rights Reserved.
  */
 package com.topcoder.management.deliverable.persistence.sql;
 
@@ -22,7 +22,7 @@ import com.topcoder.management.deliverable.persistence.PersistenceException;
 import com.topcoder.management.deliverable.persistence.sql.logging.LogMessage;
 import com.topcoder.util.log.Level;
 import com.topcoder.util.log.Log;
-import com.topcoder.util.log.LogFactory;
+import com.topcoder.util.log.LogManager;
 
 /**
  * <p>
@@ -49,7 +49,7 @@ import com.topcoder.util.log.LogFactory;
  * </p>
  *
  * @author urtks, TCSDEVELOPER
- * @version 1.2
+ * @version 1.2.3
  */
 public final class Helper {
 
@@ -114,7 +114,7 @@ public final class Helper {
      * Logger instance using the class name as category.
      * </p>
      */
-    private static final Log LOGGER = LogFactory.getLog(Helper.class.getName());
+    private static final Log LOGGER = LogManager.getLog(Helper.class.getName());
 
     /**
      * <p>
@@ -759,7 +759,7 @@ public final class Helper {
     static void closeConnection(Connection conn) throws PersistenceException {
         if (conn != null) {
             try {
-                LOGGER.log(Level.INFO, "close the connection.");
+                LOGGER.log(Level.DEBUG, "close the connection.");
                 conn.close();
             } catch (SQLException e) {
                 throw new PersistenceException("Error occurs when closing the connection.", e);
@@ -800,9 +800,9 @@ public final class Helper {
 
             if (logger != null) {
                 if (connectionName == null) {
-                    LOGGER.log(Level.INFO, "create db connection using default connection name");
+                    LOGGER.log(Level.DEBUG, "create db connection using default connection name");
                 } else {
-                    LOGGER.log(Level.INFO, "create db connection using connection name:" + connectionName);
+                    LOGGER.log(Level.DEBUG, "create db connection using connection name:" + connectionName);
                 }
             }
             conn.setAutoCommit(autoCommit);
