@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2010 TopCoder Inc., All Rights Reserved.
+ * Copyright (C) 2006-2012 TopCoder Inc., All Rights Reserved.
  */
 package com.topcoder.management.deliverable.persistence.sql;
 
@@ -12,7 +12,7 @@ import com.topcoder.management.deliverable.persistence.sql.Helper.DataType;
 import com.topcoder.management.deliverable.persistence.sql.logging.LogMessage;
 import com.topcoder.util.log.Level;
 import com.topcoder.util.log.Log;
-import com.topcoder.util.log.LogFactory;
+import com.topcoder.util.log.LogManager;
 
 import java.sql.Connection;
 import java.util.Set;
@@ -111,7 +111,7 @@ import java.util.HashSet;
  *
  * @author aubergineanode, saarixx, urtks, isv
  * @author saarixx, TCSDEVELOPER
- * @version 1.2
+ * @version 1.2.3
  */
 public class SqlDeliverablePersistence implements DeliverablePersistence {
 
@@ -120,7 +120,7 @@ public class SqlDeliverablePersistence implements DeliverablePersistence {
      * Logger instance using the class name as category.
      * </p>
      */
-    private static final Log LOGGER = LogFactory.getLog(SqlDeliverablePersistence.class.getName());
+    private static final Log LOGGER = LogManager.getLog(SqlDeliverablePersistence.class.getName());
 
     /**
      * <p>
@@ -224,7 +224,7 @@ public class SqlDeliverablePersistence implements DeliverablePersistence {
         Helper.assertObjectNotNull(connectionFactory, "connectionFactory", LOGGER);
         Helper.assertStringNotEmpty(connectionName, "connectionName", LOGGER);
 
-        LOGGER.log(Level.INFO, "Instantiate SqlDeliverablePersistence with connectionFactory and connectionName:"
+        LOGGER.log(Level.DEBUG, "Instantiate SqlDeliverablePersistence with connectionFactory and connectionName:"
                 + connectionName);
 
         this.connectionFactory = connectionFactory;
@@ -256,7 +256,7 @@ public class SqlDeliverablePersistence implements DeliverablePersistence {
         Helper.assertIdNotUnset(resourceId, "resourceId", LOGGER);
         Helper.assertIdNotUnset(phaseId, "phaseId", LOGGER);
 
-        LOGGER.log(Level.INFO, new LogMessage("Deliverable", deliverableId, null, "load Deliverables with resourceId:"
+        LOGGER.log(Level.DEBUG, new LogMessage("Deliverable", deliverableId, null, "load Deliverables with resourceId:"
                 + resourceId + " phaseId:" + phaseId
                 + ", delegate to loadDeliverables(long[] deliverableIds, long[] resourceIds, long[] phaseIds)."));
         return loadDeliverables(new long[] {deliverableId}, new long[] {resourceId}, new long[] {phaseId});
@@ -291,7 +291,7 @@ public class SqlDeliverablePersistence implements DeliverablePersistence {
         Helper.assertIdNotUnset(phaseId, "phaseId", LOGGER);
         Helper.assertIdNotUnset(submissionId, "submissionId", LOGGER);
 
-        LOGGER.log(Level.INFO, new LogMessage("Deliverable", deliverableId, null, "load Deliverable with resourceId:"
+        LOGGER.log(Level.DEBUG, new LogMessage("Deliverable", deliverableId, null, "load Deliverable with resourceId:"
                 + resourceId + " phaseId:" + phaseId + " and submissionId:" + submissionId
                 + ", delegate to loadDeliverables(long[] deliverableIds,"
                 + " long[] resourceIds, long[] phaseIds, long[] submissionIds)."));
@@ -394,7 +394,7 @@ public class SqlDeliverablePersistence implements DeliverablePersistence {
             return new Deliverable[0];
         }
 
-        LOGGER.log(Level.INFO, new LogMessage("Deliverable", null, null, "load Deliverables with deliverableIds:"
+        LOGGER.log(Level.DEBUG, new LogMessage("Deliverable", null, null, "load Deliverables with deliverableIds:"
                 + Helper.getIdString(deliverableIds) + ", resourceId:" + Helper.getIdString(resourceIds) + ",phaseId:"
                 + Helper.getIdString(phaseIds) + " and submissionIds:" + Helper.getIdString(submissionIds)));
 
