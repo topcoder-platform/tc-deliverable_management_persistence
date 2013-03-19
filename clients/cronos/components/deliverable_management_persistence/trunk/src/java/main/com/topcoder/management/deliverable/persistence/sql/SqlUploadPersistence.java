@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2012 TopCoder Inc., All Rights Reserved.
+ * Copyright (C) 2006-2013 TopCoder Inc., All Rights Reserved.
  */
 package com.topcoder.management.deliverable.persistence.sql;
 
@@ -177,7 +177,7 @@ import com.topcoder.util.sql.databaseabstraction.NullColumnValueException;
  *
  * @author aubergineanode, saarixx, urtks, George1
  * @author TCSDESIGNER, TCSDEVELOPER
- * @version 1.2.3
+ * @version 1.2.4
  */
 public class SqlUploadPersistence implements UploadPersistence {
 
@@ -2137,18 +2137,18 @@ public class SqlUploadPersistence implements UploadPersistence {
             }
             
             submission.setCreationUser(resultSet.getString("submission_create_user"));
-            submission.setCreationTimestamp(resultSet.getDate("submission_create_date"));
+            submission.setCreationTimestamp(resultSet.getTimestamp("submission_create_date"));
             submission.setModificationUser(resultSet.getString("submission_modify_user"));
-            submission.setModificationTimestamp(resultSet.getDate("submission_modify_date"));
+            submission.setModificationTimestamp(resultSet.getTimestamp("submission_modify_date"));
 
             // create a new SubmissionStatus object
             SubmissionStatus submissionStatus = new SubmissionStatus();
 
             submissionStatus.setId(resultSet.getLong("submission_status_id"));
             submissionStatus.setCreationUser(resultSet.getString("submission_status_create_user"));
-            submissionStatus.setCreationTimestamp(resultSet.getDate("submission_status_create_date"));
+            submissionStatus.setCreationTimestamp(resultSet.getTimestamp("submission_status_create_date"));
             submissionStatus.setModificationUser(resultSet.getString("submission_status_modify_user"));
-            submissionStatus.setModificationTimestamp(resultSet.getDate("submission_status_modify_date"));
+            submissionStatus.setModificationTimestamp(resultSet.getTimestamp("submission_status_modify_date"));
             submissionStatus.setName(resultSet.getString("submission_status_name"));
             submissionStatus.setDescription(resultSet.getString("submission_status_description"));
 
@@ -2159,9 +2159,9 @@ public class SqlUploadPersistence implements UploadPersistence {
 
             submissionType.setId(resultSet.getLong("submission_type_id"));
             submissionType.setCreationUser(resultSet.getString("submission_type_create_user"));
-            submissionType.setCreationTimestamp(resultSet.getDate("submission_type_create_date"));
+            submissionType.setCreationTimestamp(resultSet.getTimestamp("submission_type_create_date"));
             submissionType.setModificationUser(resultSet.getString("submission_type_modify_user"));
-            submissionType.setModificationTimestamp(resultSet.getDate("submission_type_modify_date"));
+            submissionType.setModificationTimestamp(resultSet.getTimestamp("submission_type_modify_date"));
             submissionType.setName(resultSet.getString("submission_type_name"));
             submissionType.setDescription(resultSet.getString("submission_type_description"));
 
@@ -2176,9 +2176,9 @@ public class SqlUploadPersistence implements UploadPersistence {
                 prize.setPrizeAmount(resultSet.getDouble("prize_amount"));
                 prize.setNumberOfSubmissions(resultSet.getInt("number_of_submissions"));
                 prize.setCreationUser(resultSet.getString("prize_create_user"));
-                prize.setCreationTimestamp(resultSet.getDate("prize_create_date"));
+                prize.setCreationTimestamp(resultSet.getTimestamp("prize_create_date"));
                 prize.setModificationUser(resultSet.getString("prize_modify_user"));
-                prize.setModificationTimestamp(resultSet.getDate("prize_modify_date"));
+                prize.setModificationTimestamp(resultSet.getTimestamp("prize_modify_date"));
 
                 PrizeType prizeType = new PrizeType();
                 prizeType.setId(resultSet.getLong("prize_type_id"));
@@ -2215,9 +2215,9 @@ public class SqlUploadPersistence implements UploadPersistence {
 
             upload.setId(resultSet.getLong("upload_id"));
             upload.setCreationUser(resultSet.getString("upload_create_user"));
-            upload.setCreationTimestamp(resultSet.getDate("upload_create_date"));
+            upload.setCreationTimestamp(resultSet.getTimestamp("upload_create_date"));
             upload.setModificationUser(resultSet.getString("upload_modify_user"));
-            upload.setModificationTimestamp(resultSet.getDate("upload_modify_date"));
+            upload.setModificationTimestamp(resultSet.getTimestamp("upload_modify_date"));
 
             upload.setProject(resultSet.getLong("project_id"));
             upload.setProjectPhase(resultSet.getLong("project_phase_id"));
@@ -2230,9 +2230,9 @@ public class SqlUploadPersistence implements UploadPersistence {
 
             uploadType.setId(resultSet.getLong("upload_type_id"));
             uploadType.setCreationUser(resultSet.getString("upload_type_create_user"));
-            uploadType.setCreationTimestamp(resultSet.getDate("upload_type_create_date"));
+            uploadType.setCreationTimestamp(resultSet.getTimestamp("upload_type_create_date"));
             uploadType.setModificationUser(resultSet.getString("upload_type_modify_user"));
-            uploadType.setModificationTimestamp(resultSet.getDate("upload_type_modify_date"));
+            uploadType.setModificationTimestamp(resultSet.getTimestamp("upload_type_modify_date"));
             uploadType.setName(resultSet.getString("upload_type_name"));
             uploadType.setDescription(resultSet.getString("upload_type_description"));
 
@@ -2243,9 +2243,9 @@ public class SqlUploadPersistence implements UploadPersistence {
 
             uploadStatus.setId(resultSet.getLong("upload_status_id"));
             uploadStatus.setCreationUser(resultSet.getString("upload_status_create_user"));
-            uploadStatus.setCreationTimestamp(resultSet.getDate("upload_status_create_date"));
+            uploadStatus.setCreationTimestamp(resultSet.getTimestamp("upload_status_create_date"));
             uploadStatus.setModificationUser(resultSet.getString("upload_status_modify_user"));
-            uploadStatus.setModificationTimestamp(resultSet.getDate("upload_status_modify_date"));
+            uploadStatus.setModificationTimestamp(resultSet.getTimestamp("upload_status_modify_date"));
             uploadStatus.setName(resultSet.getString("upload_status_name"));
             uploadStatus.setDescription(resultSet.getString("upload_status_description"));
 
