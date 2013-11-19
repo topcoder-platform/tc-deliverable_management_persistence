@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2012 TopCoder Inc., All Rights Reserved.
+ * Copyright (C) 2006-2013 TopCoder Inc., All Rights Reserved.
  */
 package com.topcoder.management.deliverable.persistence.sql;
 
@@ -108,10 +108,16 @@ import java.util.HashSet;
  * database is changed from different threads. This can equally well occur when the component is used on multiple
  * machines or multiple instances are used, so this is not a thread-safety concern.
  * </p>
+ * <p>
+ * Version 1.2.5 (Online Review - Iterative Review Assembly 1.0) Change notes:
+ *   <ol>
+ *     <li>Updated {@link #LOAD_DELIVERABLES_WITH_SUBMISSION_SQL} to return deliverables just for most old active 
+ *     submission in case the project phase is of Iterative Review type.</li>
+ *   </ol>
+ * </p>
  *
- * @author aubergineanode, saarixx, urtks, isv
- * @author saarixx, TCSDEVELOPER
- * @version 1.2.3
+ * @author aubergineanode, saarixx, urtks, isv, duxiaoyang
+ * @version 1.2.5
  */
 public class SqlDeliverablePersistence implements DeliverablePersistence {
 
@@ -137,7 +143,21 @@ public class SqlDeliverablePersistence implements DeliverablePersistence {
             + "INNER JOIN project_phase p ON p.project_id = r.project_id AND p.phase_type_id = d.phase_type_id "
             + "INNER JOIN upload u ON u.project_id = r.project_id and u.upload_status_id=1 and u.upload_type_id=1 "
             + "INNER JOIN submission s ON s.submission_type_id = d.submission_type_id AND s.submission_status_id = 1 and s.upload_id = u.upload_id "
-            + "WHERE d.submission_type_id IS NOT NULL " + "AND ";
+            + "WHERE d.submission_type_id IS NOT NULL " 
+            + "AND u.create_date = ( "
+            + "    CASE "
+            + "        WHEN p.phase_type_id = 18 "
+            + "        THEN "
+            + "                (SELECT MIN(u1.create_date) "
+            + "                 FROM upload u1 "
+            + "                 INNER JOIN submission s1 ON s1.upload_id = u1.upload_id AND s1.submission_status_id = 1"
+            + "                 WHERE s1.submission_type_id = d.submission_type_id "
+            + "                 AND   u1.upload_status_id = 1 AND u1.upload_type_id = 1 "
+            + "                 AND   u1.project_id = p.project_id) "
+            + "        ELSE u.create_date "
+            + "    END "
+            + ")  "
+            + "AND ";
 
     /**
      * <p>
