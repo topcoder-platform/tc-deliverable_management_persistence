@@ -175,9 +175,8 @@ import com.topcoder.util.sql.databaseabstraction.NullColumnValueException;
  * machines or multiple instances are used, so this is not a thread-safety concern.
  * </p>
  *
- * @author aubergineanode, saarixx, urtks, George1
- * @author TCSDESIGNER, TCSDEVELOPER
- * @version 1.2.4
+ * @author aubergineanode, saarixx, urtks, George1, gjw99
+ * @version 1.2.6
  */
 public class SqlUploadPersistence implements UploadPersistence {
 
@@ -344,8 +343,9 @@ public class SqlUploadPersistence implements UploadPersistence {
     private static final String ADD_SUBMISSION_SQL = "INSERT INTO submission "
             + "(submission_id, create_user, create_date, modify_user, modify_date, "
             + "submission_status_id, submission_type_id, screening_score, "
-            + "initial_score, final_score, placement, user_rank, mark_for_purchase, prize_id, upload_id)"
-            + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "initial_score, final_score, placement, user_rank, mark_for_purchase, prize_id, upload_id, "
+            + "thurgood_job_id)"
+            + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     /**
      * <p>
@@ -358,7 +358,7 @@ public class SqlUploadPersistence implements UploadPersistence {
     private static final DataType[] ADD_SUBMISSION_ARGUMENT_TYPES = new DataType[] {Helper.LONG_TYPE,
         Helper.STRING_TYPE, Helper.DATE_TYPE, Helper.STRING_TYPE, Helper.DATE_TYPE, Helper.LONG_TYPE, Helper.LONG_TYPE,
         Helper.DOUBLE_TYPE, Helper.DOUBLE_TYPE, Helper.DOUBLE_TYPE, Helper.LONG_TYPE,
-        Helper.INTEGER_TYPE, Helper.BOOLEAN_TYPE, Helper.LONG_TYPE, Helper.LONG_TYPE};
+        Helper.INTEGER_TYPE, Helper.BOOLEAN_TYPE, Helper.LONG_TYPE, Helper.LONG_TYPE, Helper.STRING_TYPE};
 
     /**
      * <p>
@@ -421,7 +421,8 @@ public class SqlUploadPersistence implements UploadPersistence {
     private static final String UPDATE_SUBMISSION_SQL = "UPDATE submission "
             + "SET modify_user = ?, modify_date = ?, submission_status_id = ?, submission_type_id = ?, "
             + "screening_score = ?, initial_score = ?, final_score = ?, placement = ?, "
-            + " user_rank = ?, mark_for_purchase = ?, prize_id = ?, upload_id = ? WHERE submission_id = ?";
+            + " user_rank = ?, mark_for_purchase = ?, prize_id = ?, upload_id = ?, thurgood_job_id = ?"
+            + " WHERE submission_id = ?";
 
     /**
      * <p>
@@ -434,7 +435,7 @@ public class SqlUploadPersistence implements UploadPersistence {
     private static final DataType[] UPDATE_SUBMISSION_WITH_ARGUMENT_TYPES = new DataType[] {Helper.STRING_TYPE,
         Helper.DATE_TYPE, Helper.LONG_TYPE, Helper.LONG_TYPE, Helper.DOUBLE_TYPE, Helper.DOUBLE_TYPE,
         Helper.DOUBLE_TYPE, Helper.LONG_TYPE, Helper.INTEGER_TYPE, Helper.BOOLEAN_TYPE,
-        Helper.LONG_TYPE, Helper.LONG_TYPE, Helper.LONG_TYPE};
+        Helper.LONG_TYPE, Helper.LONG_TYPE, Helper.STRING_TYPE, Helper.LONG_TYPE};
 
     /**
      * <p>
@@ -502,7 +503,7 @@ public class SqlUploadPersistence implements UploadPersistence {
             + "submission_type_lu.modify_user, submission_type_lu.modify_date, "
             + "submission_type_lu.name, submission_type_lu.description, "
             + "submission.screening_score, submission.initial_score, submission.final_score, submission.placement, "
-            + "submission.user_rank, submission.mark_for_purchase, "
+            + "submission.user_rank, submission.mark_for_purchase, submission.thurgood_job_id, "
             + "prize.prize_id, prize.place, prize.prize_amount, prize.prize_type_id, prize.number_of_submissions, "
             + "prize.create_user, prize.create_date, prize.modify_user, prize.modify_date, "
             + "prize_type_lu.prize_type_desc, "
@@ -542,7 +543,7 @@ public class SqlUploadPersistence implements UploadPersistence {
         Helper.STRING_TYPE, Helper.STRING_TYPE,
 
         Helper.DOUBLE_TYPE, Helper.DOUBLE_TYPE, Helper.DOUBLE_TYPE, Helper.LONG_TYPE,
-        Helper.INTEGER_TYPE, Helper.BOOLEAN_TYPE,
+        Helper.INTEGER_TYPE, Helper.BOOLEAN_TYPE, Helper.STRING_TYPE,
 
         Helper.LONG_TYPE, Helper.INTEGER_TYPE, Helper.DOUBLE_TYPE, Helper.LONG_TYPE, Helper.INTEGER_TYPE,
         Helper.STRING_TYPE, Helper.DATE_TYPE, Helper.STRING_TYPE, Helper.DATE_TYPE, Helper.STRING_TYPE,
@@ -1298,7 +1299,7 @@ public class SqlUploadPersistence implements UploadPersistence {
             submission.getScreeningScore(), submission.getInitialScore(), submission.getFinalScore(),
             submission.getPlacement(), submission.getUserRank(), submission.isExtra(),
             submission.getPrize() != null ? submission.getPrize().getId() : null,
-            submission.getUpload() != null ? submission.getUpload().getId() : null};
+            submission.getUpload() != null ? submission.getUpload().getId() : null, submission.getThurgoodJobId()};
 
         // add submission to database
         doDMLQuery(connectionFactory, connectionName, ADD_SUBMISSION_SQL, ADD_SUBMISSION_ARGUMENT_TYPES, queryArgs,
@@ -1336,7 +1337,8 @@ public class SqlUploadPersistence implements UploadPersistence {
             submission.getScreeningScore(), submission.getInitialScore(), submission.getFinalScore(),
             submission.getPlacement(), submission.getUserRank(), submission.isExtra(),
             submission.getPrize() != null ? submission.getPrize().getId() : null,
-            submission.getUpload() != null ? submission.getUpload().getId() : null, submission.getId()};
+            submission.getUpload() != null ? submission.getUpload().getId() : null,
+            submission.getThurgoodJobId(), submission.getId()};
 
         // update submission to database
         doDMLQuery(connectionFactory, connectionName, UPDATE_SUBMISSION_SQL, UPDATE_SUBMISSION_WITH_ARGUMENT_TYPES,
@@ -2081,6 +2083,12 @@ public class SqlUploadPersistence implements UploadPersistence {
 		if (extra != null) {
             submission.setExtra((Boolean) extra);
 		}
+        
+        Object thurgoodJobId = row[startIndex++];
+        if (thurgoodJobId != null) {
+            submission.setThurgoodJobId((String) thurgoodJobId);
+        }
+        
         Prize prize = new Prize();
         startIndex = loadPrizeEntityFieldsSequentially(prize, row, startIndex);
 
@@ -2130,7 +2138,11 @@ public class SqlUploadPersistence implements UploadPersistence {
             if (resultSet.getObject("mark_for_purchase") != null) {
                 submission.setExtra(resultSet.getBoolean("mark_for_purchase"));
             }
-			
+
+            if (resultSet.getObject("thurgood_job_id") != null) {
+                submission.setThurgoodJobId(resultSet.getString("thurgood_job_id"));
+            }
+            
             submission.setId(resultSet.getLong("submission_id"));
             if(resultSet.getObject("user_rank")!=null) {
                 submission.setUserRank(resultSet.getInt("user_rank"));
