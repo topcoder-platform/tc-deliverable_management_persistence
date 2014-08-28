@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2013 TopCoder Inc., All Rights Reserved.
+ * Copyright (C) 2006-2014 TopCoder Inc., All Rights Reserved.
  */
 package com.topcoder.management.deliverable.persistence.sql;
 
@@ -15,8 +15,7 @@ import com.topcoder.util.log.Log;
 import com.topcoder.util.log.LogManager;
 
 import java.sql.Connection;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.*;
 
 /**
  * <p>
@@ -117,7 +116,7 @@ import java.util.HashSet;
  * </p>
  *
  * @author aubergineanode, saarixx, urtks, isv, duxiaoyang
- * @version 1.2.5
+ * @version 1.2.7
  */
 public class SqlDeliverablePersistence implements DeliverablePersistence {
 
@@ -373,11 +372,104 @@ public class SqlDeliverablePersistence implements DeliverablePersistence {
 
     /**
      * <p>
+     * Constructs WHERE clause of the SQL statement for retrieving deliverables.
+     * </p>
+     *
+     * @param deliverableIds
+     *            The ids of deliverables to load, should not be null
+     * @param resourceIds
+     *            The resource ids of deliverables to load, should not be null
+     * @param phaseIds
+     *            The phase ids of deliverables to load, should not be null
+     * @param submissionIds
+     *            The ids of the submission for each deliverable, can be null
+     * @return SQL WHERE clause
+     */
+    private String constructSQLCondition(long[] deliverableIds, long[] resourceIds, long[] phaseIds,
+                                  long[] submissionIds) {
+        Set<Long> distinctDeliverableIds = new HashSet<Long>();
+        for (long deliverableId : deliverableIds) {
+            distinctDeliverableIds.add(deliverableId);
+        }
+
+        // build the match condition string.
+        StringBuilder stringBuffer = new StringBuilder();
+        stringBuffer.append('(');
+
+        // To reduce size of the SQL we move the equality check for deliverable_id out of the braces.
+        // We do that by several linear traversal through the arrays each time picking up the only items with
+        // a certain deliverable ID.
+        boolean firstDeliverable = true;
+        for (Long deliverableId : distinctDeliverableIds) {
+            if (!firstDeliverable) {
+                stringBuffer.append(" OR ");
+            }
+            firstDeliverable = false;
+            stringBuffer.append("(d.deliverable_id=").append(deliverableId).append(" AND (");
+
+            // To reduce size of the SQL even further, we now group by phase ID.
+            Map<Long, List<Long>> submissionsByPhase = new HashMap<Long, List<Long>>();
+            Map<Long, List<Long>> resourcesByPhase = new HashMap<Long, List<Long>>();
+            for (int i = 0; i < deliverableIds.length; ++i) {
+                if (deliverableIds[i] == deliverableId) {
+                    List<Long> resources = resourcesByPhase.get(phaseIds[i]);
+                    if (resources == null) {
+                        resources = new ArrayList<Long>();
+                        resourcesByPhase.put(phaseIds[i], resources);
+                    }
+                    resources.add(resourceIds[i]);
+
+                    if (submissionIds != null) {
+                        List<Long> submissions = submissionsByPhase.get(phaseIds[i]);
+                        if (submissions == null) {
+                            submissions = new ArrayList<Long>();
+                            submissionsByPhase.put(phaseIds[i], submissions);
+                        }
+                        submissions.add(submissionIds[i]);
+                    }
+                }
+            }
+
+            // Now loop through all phases and for each phase construct a separate block of conditions separated by OR.
+            boolean firstPhase = true;
+            for(Long phaseId : resourcesByPhase.keySet()) {
+                if (!firstPhase) {
+                    stringBuffer.append(" OR ");
+                }
+                firstPhase = false;
+                stringBuffer.append("(p.project_phase_id=").append(phaseId).append(" AND (");
+
+                List<Long> resources = resourcesByPhase.get(phaseId);
+                List<Long> submissions = submissionsByPhase.get(phaseId);
+                for (int i = 0; i < resources.size(); ++i) {
+                    if (i>0) {
+                        stringBuffer.append(" OR ");
+                    }
+
+                    stringBuffer.append("(");
+                    if (submissions != null) {
+                        stringBuffer.append("s.submission_id=").append(submissions.get(i)).append(" AND ");
+                    }
+                    stringBuffer.append("r.resource_id=").append(resources.get(i)).append(")");
+                }
+
+                stringBuffer.append("))");
+            }
+
+            stringBuffer.append("))");
+        }
+
+        stringBuffer.append(')');
+        return stringBuffer.toString();
+    }
+    
+    /**
+     * <p>
      * Loads the deliverables associated with the given IDs, resource and (optionally) submissions.
      * </p>
      *
      * @param deliverableIds
-     *            The ids of deliverables to load
+     *            The ids of deliverables to load, should not be null
      * @param resourceIds
      *            The resource ids of deliverables to load, should not be null
      * @param phaseIds
@@ -418,60 +510,7 @@ public class SqlDeliverablePersistence implements DeliverablePersistence {
                 + Helper.getIdString(deliverableIds) + ", resourceId:" + Helper.getIdString(resourceIds) + ",phaseId:"
                 + Helper.getIdString(phaseIds) + " and submissionIds:" + Helper.getIdString(submissionIds)));
 
-        Set<Long> distinctDeliverableIds = new HashSet<Long>();
-        for (long deliverableId : deliverableIds) {
-            distinctDeliverableIds.add(deliverableId);
-        }
-
-        // build the match condition string.
-        StringBuilder stringBuffer = new StringBuilder();
-        stringBuffer.append('(');
-
-        // To reduce size of the string we move the equality check for deliverable_id out of the braces.
-        // We do that by several linear traversal through the arrays each time picking up the only items with
-        // a certain deliverable ID.
-        boolean firstDeliverable = true;
-        for (Long deliverableId : distinctDeliverableIds) {
-            if (!firstDeliverable) {
-                stringBuffer.append(" OR ");
-            }
-            firstDeliverable = false;
-
-            stringBuffer.append("(");
-            stringBuffer.append("d.deliverable_id=");
-            stringBuffer.append(deliverableId);
-            stringBuffer.append(" AND ");
-            stringBuffer.append("(");
-
-            boolean firstCondition = true;
-            for (int i = 0; i < deliverableIds.length; ++i) {
-                if (deliverableIds[i] != deliverableId) {
-                    continue;
-                }
-                if (!firstCondition) {
-                    stringBuffer.append(" OR ");
-                }
-                firstCondition = false;
-
-                stringBuffer.append("(");
-                if (submissionIds != null) {
-                    stringBuffer.append("s.submission_id=");
-                    stringBuffer.append(submissionIds[i]);
-                    stringBuffer.append(" AND ");
-                }
-                stringBuffer.append("r.resource_id=");
-                stringBuffer.append(resourceIds[i]);
-                stringBuffer.append(" AND ");
-                stringBuffer.append("p.project_phase_id=");
-                stringBuffer.append(phaseIds[i]);
-                stringBuffer.append(")");
-            }
-            stringBuffer.append(")");
-            stringBuffer.append(")");
-        }
-
-        stringBuffer.append(')');
-        String matchCondition = stringBuffer.toString();
+        String matchCondition = constructSQLCondition(deliverableIds, resourceIds, phaseIds, submissionIds);
 
         Connection conn = null;
         try {
